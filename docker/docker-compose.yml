@@ -1,0 +1,26 @@
+#This is the file that runs two containers
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: myDB  
+      POSTGRES_USER: akhil1507  
+      POSTGRES_PASSWORD: adkhhoinli  
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgresql://akhil1507:adkhhoinli@db/myDB
+    command: ["bash", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"]
+
+volumes:
+  db_data:
